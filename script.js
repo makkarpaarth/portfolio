@@ -1,5 +1,14 @@
 document.getElementById('year').textContent = new Date().getFullYear();
 
+/* ================= Card spotlight follows pointer ================= */
+document.querySelectorAll('.branch').forEach(card => {
+  card.addEventListener('pointermove', event => {
+    const bounds = card.getBoundingClientRect();
+    card.style.setProperty('--spot-x', `${event.clientX - bounds.left}px`);
+    card.style.setProperty('--spot-y', `${event.clientY - bounds.top}px`);
+  });
+});
+
 /* ================= Background animated risk curve ================= */
 (function bgCurve(){
   const canvas = document.getElementById('bg-curve');
