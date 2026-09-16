@@ -12,7 +12,7 @@
 
 <canvas id="bg-curve"></canvas>
 
-<header class="nav">
+<header class="nav" id="top">
   <div class="nav__logo" aria-label="Paarth Makkar logo">
     <span class="nav__logo-mark" aria-hidden="true">Paarth</span>
   </div>
@@ -231,15 +231,55 @@
 
   <!-- CONTACT -->
   <section class="contact" id="contact">
-    <h2 class="section-title">Contact</h2>
-    <p class="contact__line"><a href="mailto:paarthmakkar99@gmail.com">paarthmakkar99@gmail.com</a></p>
-    <p class="contact__line"><a href="tel:+917982796215">+91 79827 96215</a></p>
-    <p class="contact__line">New Delhi, India</p>
+    <div class="contact__inner">
+      <div class="contact__intro">
+        <p class="contact__eyebrow">Contact</p>
+        <h2 class="contact__title">Let’s build something<br><em>thoughtful.</em></h2>
+        <p class="contact__lede">Download my resume to explore my actuarial experience, technical toolkit, and recent work.</p>
+        <a class="contact__resume" href="Paarth%20Makkar%20-%205%20papers%20-%201%20year%20exp.pdf" download="Paarth-Makkar-Resume.pdf">
+          <span class="contact__resume-icon" aria-hidden="true">↓</span>
+          <span>Download my resume</span>
+        </a>
+      </div>
+
+      <div class="contact__details">
+        <div class="contact__detail">
+          <span class="contact__detail-label">Based in</span>
+          <span>New Delhi, India</span>
+        </div>
+        <div class="contact__detail">
+          <span class="contact__detail-label">Email</span>
+          <a href="mailto:paarthmakkar99@gmail.com">paarthmakkar99@gmail.com</a>
+        </div>
+        <div class="contact__detail">
+          <span class="contact__detail-label">Professional network</span>
+          <a href="https://www.linkedin.com/in/paarthmakkar" target="_blank" rel="noopener noreferrer">LinkedIn <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+    </div>
   </section>
 
 </main>
 
-<footer class="footer">© <span id="year"></span> Paarth Makkar — built for the actuarial market.</footer>
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__identity">
+      <span class="footer__name">Paarth Makkar</span>
+      <span>Actuarial Technician II — Forvis Mazars</span>
+    </div>
+    <nav class="footer__links" aria-label="Footer links">
+      <a href="https://www.linkedin.com/in/paarthmakkar" target="_blank" rel="noopener noreferrer">LinkedIn <span aria-hidden="true">↗</span></a>
+      <a href="https://wa.me/917982796215" target="_blank" rel="noopener noreferrer">WhatsApp <span aria-hidden="true">↗</span></a>
+      <a href="mailto:paarthmakkar99@gmail.com">Email <span aria-hidden="true">↗</span></a>
+      <a href="Paarth%20Makkar%20-%205%20papers%20-%201%20year%20exp.pdf" download="Paarth-Makkar-Resume.pdf">Resume <span aria-hidden="true">↓</span></a>
+      <a href="#top">Back to top <span aria-hidden="true">↑</span></a>
+    </nav>
+  </div>
+  <div class="footer__base">
+    <span>© <span id="year"></span> Paarth Makkar. All rights reserved.</span>
+    <a href="mailto:paarthmakkar99@gmail.com">paarthmakkar99@gmail.com</a>
+  </div>
+</footer>
 
 <script src="script.js"></script>
 </body>
