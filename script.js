@@ -1,5 +1,22 @@
 document.getElementById('year').textContent = new Date().getFullYear();
 
+/* ================= Skills toolkit: hover reveals tool + example use ================= */
+(function skillsInfo(){
+  const panel = document.getElementById('skills-info');
+  const track = document.querySelector('.skills__track');
+  if (!panel || !track) return;
+  const tool = panel.querySelector('.skills__info-tool');
+  const use = panel.querySelector('.skills__info-use');
+
+  track.addEventListener('pointerover', (e) => {
+    const tile = e.target.closest('.skill-tile');
+    if (!tile) return;
+    tool.textContent = tile.dataset.name;
+    use.textContent = tile.dataset.use;
+    panel.classList.add('is-active');
+  });
+})();
+
 /* ================= Card spotlight follows pointer ================= */
 document.querySelectorAll('.branch').forEach(card => {
   card.addEventListener('pointermove', event => {

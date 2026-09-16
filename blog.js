@@ -82,21 +82,6 @@ function renderPosts(){
 }
 renderPosts();
 
-document.getElementById('blog-form').addEventListener('submit', (e) => {
-  e.preventDefault();
-  const title = document.getElementById('blog-title').value.trim();
-  const body = document.getElementById('blog-body').value.trim();
-  if (!title || !body) return;
-  posts.unshift({
-    id: cryptoId(),
-    title, body,
-    date: new Date().toLocaleDateString('en-GB', { month: 'short', year: 'numeric' }),
-    likes: 0, liked: false, comments: []
-  });
-  e.target.reset();
-  renderPosts();
-});
-
 blogList.addEventListener('click', (e) => {
   const postEl = e.target.closest('.post');
   if (!postEl) return;
