@@ -1,5 +1,14 @@
 document.getElementById('year').textContent = new Date().getFullYear();
 
+const backToTop = document.querySelector('a[href="#top"]');
+if (backToTop) {
+  backToTop.addEventListener('click', event => {
+    event.preventDefault();
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+  });
+}
+
 /* ================= Skills toolkit: hover reveals tool + example use ================= */
 (function skillsInfo(){
   const panel = document.getElementById('skills-info');
