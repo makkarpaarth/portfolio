@@ -109,26 +109,33 @@ function animateCount(el){
 
 /* exam branch cards expand on hover — pure CSS, no JS needed */
 
-/* ================= Mini sparkline charts on model cards ================= */
-function sparkline(seed){
-  const pts = [];
-  let v = 30 + seed * 7;
-  for (let i = 0; i < 24; i++){
-    v += (Math.sin(i * (0.4 + seed * 0.1)) * 6) + (Math.random() * 4 - 2);
-    pts.push(v);
-  }
-  const min = Math.min(...pts), max = Math.max(...pts);
-  const norm = pts.map((p, i) => {
-    const x = (i / (pts.length - 1)) * 260;
-    const y = 80 - ((p - min) / (max - min || 1)) * 70 - 5;
-    return `${x},${y}`;
-  });
-  return `<svg viewBox="0 0 260 90" preserveAspectRatio="none">
-    <polyline points="${norm.join(' ')}" fill="none" stroke="#35C9B0" stroke-width="2"/>
-  </svg>`;
+/* ================= Quiet animated visuals on model rows ================= */
+function modelVisual(type){
+  const visuals = {
+    reserve: `<svg class="model-visual model-visual--reserve" viewBox="0 0 260 90" preserveAspectRatio="none" aria-hidden="true">
+      <path class="model-visual__axis" d="M8 78H252"/>
+      <path class="model-visual__curve" pathLength="1" d="M8 69C38 65 46 46 72 43S108 54 130 39s39-24 58-19 26 13 64-11"/>
+      <circle class="model-visual__marker" cx="130" cy="39" r="3"/>
+    </svg>`,
+    unitlinked: `<svg class="model-visual model-visual--unitlinked" viewBox="0 0 260 90" preserveAspectRatio="none" aria-hidden="true">
+      <path class="model-visual__axis" d="M8 78H252"/>
+      <path class="model-visual__curve" pathLength="1" d="M8 65C31 58 42 37 65 42s27 21 48 10 28-34 50-30 26 22 43 17 28-22 46-29"/>
+      <path class="model-visual__projection" d="M168 22V78"/>
+      <circle class="model-visual__marker" cx="168" cy="22" r="3"/>
+    </svg>`,
+    workflow: `<svg class="model-visual model-visual--workflow" viewBox="0 0 260 90" preserveAspectRatio="none" aria-hidden="true">
+      <path class="model-visual__axis" d="M18 45H242"/>
+      <circle class="model-visual__node" cx="34" cy="45" r="7"/>
+      <circle class="model-visual__node" cx="130" cy="45" r="7"/>
+      <circle class="model-visual__node" cx="226" cy="45" r="7"/>
+      <path class="model-visual__pulse" d="M34 45H226"/>
+      <path class="model-visual__tick" d="M72 38l7 7-7 7M168 38l7 7-7 7"/>
+    </svg>`
+  };
+  return visuals[type] || visuals.reserve;
 }
-document.querySelectorAll('.model-card__chart').forEach((el, i) => {
-  el.innerHTML = sparkline(i + 1);
+document.querySelectorAll('.model-card__chart').forEach(el => {
+  el.innerHTML = modelVisual(el.dataset.chart);
 });
 
 /* ================= Blog: moved to blog.html / blog.js ================= */

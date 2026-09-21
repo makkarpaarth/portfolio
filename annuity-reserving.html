@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Annuity Reserving Model — Paarth Makkar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+</head>
+<body>
+
+<canvas id="bg-curve"></canvas>
+
+<header class="nav">
+  <div class="nav__logo" aria-label="Paarth Makkar logo">
+    <a href="index.html" aria-label="Go to home page">
+      <span class="nav__logo-mark" aria-hidden="true">Paarth</span>
+    </a>
+  </div>
+  <nav class="nav__links">
+    <a href="index.html#work">Experience</a>
+    <a href="index.html#exams">Exams</a>
+    <a href="index.html#modelling">Modelling</a>
+    <a href="blog.html">Blog</a>
+    <a href="index.html#contact">Contact</a>
+    <a class="nav__linkedin" href="https://www.linkedin.com/in/paarthmakkar" target="_blank" rel="noopener noreferrer" aria-label="Visit Paarth Makkar on LinkedIn">LinkedIn</a>
+  </nav>
+</header>
+
+<main>
+
+  <!-- HERO -->
+  <section class="project-hero">
+    <p class="project-hero__eyebrow">Models · Case Study</p>
+    <h1 class="project-hero__title">Annuity Reserving Model</h1>
+    <p class="project-hero__lede">An Excel-based actuarial model for projecting annuity cash flows, survival benefits and policy-level reserves — built with configurable mortality, discounting and policy assumptions, and a Python rebuild in progress.</p>
+    <div class="project-hero__tags">
+      <span class="pill">Excel</span>
+      <span class="pill">Actuarial Modelling</span>
+      <span class="pill">Reserving</span>
+      <span class="pill">Mortality</span>
+      <span class="pill">Discounting</span>
+    </div>
+  </section>
+
+  <!-- OVERVIEW -->
+  <section class="project-section" id="overview">
+    <h2 class="project-section__title">Overview</h2>
+    <p>I built an Excel-based actuarial model to project future annuity cash flows and calculate policy-level reserves under specified mortality, interest-rate and policy assumptions. The model is organised as a single directional pipeline, from raw policy data through to a portfolio-level reserve summary.</p>
+    <div class="flow">
+      <span class="flow__step"><span class="flow__index">01</span><span>Policy Data</span></span><span class="flow__arrow" aria-hidden="true">→</span>
+      <span class="flow__step"><span class="flow__index">02</span><span>Assumptions</span></span><span class="flow__arrow" aria-hidden="true">→</span>
+      <span class="flow__step"><span class="flow__index">03</span><span>Survival Projection</span></span><span class="flow__arrow" aria-hidden="true">→</span>
+      <span class="flow__step"><span class="flow__index">04</span><span>Benefit Cash Flows</span></span><span class="flow__arrow" aria-hidden="true">→</span>
+      <span class="flow__step"><span class="flow__index">05</span><span>Discounting</span></span><span class="flow__arrow" aria-hidden="true">→</span>
+      <span class="flow__step"><span class="flow__index">06</span><span>Reserve</span></span><span class="flow__arrow" aria-hidden="true">→</span>
+      <span class="flow__step"><span class="flow__index">07</span><span>Portfolio Summary</span></span>
+    </div>
+  </section>
+
+  <!-- ACTUARIAL MATHEMATICS -->
+  <section class="project-section" id="mathematics">
+    <h2 class="project-section__title">Actuarial Mathematics</h2>
+    <p>The reserve isn't one formula — it's five steps chained together, each feeding the next, mirroring how the model's BEL sheet actually walks each policy forward year by year. Starting from age- and sex-specific mortality, the model builds up the odds a policyholder is still alive in each future year, uses that to weight every cash flow — premiums coming in, expenses, commission and annuity payments going out — discounts each by the forward yield curve, and sums the result into a single best-estimate liability per policy.</p>
+
+    <div class="formula-chain" aria-label="Annuity reserving formula chain">
+      <div class="formula-chain__nodes" role="tablist" aria-label="Formula steps">
+        <button class="formula-node is-active" type="button" role="tab" aria-selected="true" aria-controls="formula-detail-1" data-formula="1">
+          <span class="formula-node__step">01</span>
+          <span class="formula-node__formula" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 16c3 0 3-8 6-8s3 8 6 8 3-8 6-8 3 8 6 8"/><circle cx="27" cy="8" r="2" fill="currentColor" stroke="none"/></svg></span>
+          <span class="formula-node__label">Mortality</span>
+        </button>
+        <button class="formula-node" type="button" role="tab" aria-selected="false" aria-controls="formula-detail-2" data-formula="2">
+          <span class="formula-node__step">02</span>
+          <span class="formula-node__formula" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 25c4-9 8-15 13-15 3 0 5 2 9-3"/><path d="M20 7h7v7"/><circle cx="7" cy="25" r="2" fill="currentColor" stroke="none"/></svg></span>
+          <span class="formula-node__label">Survival</span>
+        </button>
+        <button class="formula-node" type="button" role="tab" aria-selected="false" aria-controls="formula-detail-3" data-formula="3">
+          <span class="formula-node__step">03</span>
+          <span class="formula-node__formula" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 8v16M7 16h18M25 16l-5-5M25 16l-5 5"/><circle cx="7" cy="8" r="2" fill="currentColor" stroke="none"/></svg></span>
+          <span class="formula-node__label">Cash flow</span>
+        </button>
+        <button class="formula-node" type="button" role="tab" aria-selected="false" aria-controls="formula-detail-4" data-formula="4">
+          <span class="formula-node__step">04</span>
+          <span class="formula-node__formula" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 8h22M5 16h15M5 24h9"/><path d="M23 13v10M19 19l4 4 4-4"/></svg></span>
+          <span class="formula-node__label">Discount</span>
+        </button>
+        <button class="formula-node" type="button" role="tab" aria-selected="false" aria-controls="formula-detail-5" data-formula="5">
+          <span class="formula-node__step">05</span>
+          <span class="formula-node__formula" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 24h22M8 24V13M16 24V8M24 24V16"/><path d="M5 10l7-4 7 3 8-5"/><circle cx="27" cy="4" r="2" fill="currentColor" stroke="none"/></svg></span>
+          <span class="formula-node__label">Reserve</span>
+        </button>
+      </div>
+
+      <div class="formula-detail" id="formula-detail-1" role="tabpanel" aria-live="polite">
+        <div class="formula-detail__heading">
+          <span class="formula-detail__kicker">Step 01 · Mortality</span>
+          <span class="formula-detail__equation">qₓ₊ₖ (male / female)</span>
+        </div>
+        <div class="formula-detail__copy">
+          <p class="formula-detail__meaning">The single-year mortality rate at each attained age, held separately by sex.</p>
+          <p class="formula-detail__symbols"><strong>Symbols</strong> <span>q = mortality rate · x = age at entry · k = future year</span></p>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- EXCEL SCREENSHOTS -->
+  <section class="project-section" id="screenshots">
+    <h2 class="project-section__title">Excel Model — Selected Views</h2>
+    <p>A sanitised look at the input interface, assumption module and projection table. The underlying workbook itself isn't distributed publicly.</p>
+
+    <div class="placeholder-gallery" aria-label="Excel model selected views">
+      <div class="placeholder-shot placeholder-shot--image" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Open policy input screen in image viewer">
+        <img class="placeholder-shot__image" src="models/annuity-reserving/input-screen.png" alt="Policy input screen showing the annuity model input interface">
+      </div>
+      <div class="placeholder-shot placeholder-shot--image" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Open assumptions module in image viewer">
+        <img class="placeholder-shot__image" src="models/annuity-reserving/assumptions.png" alt="Assumptions module for the annuity model">
+      </div>
+      <div class="placeholder-shot placeholder-shot--image" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Open projection table in image viewer">
+        <img class="placeholder-shot__image" src="models/annuity-reserving/projection-table.png" alt="Projection table for the annuity model">
+      </div>
+    </div>
+
+    <div class="image-viewer" id="image-viewer" role="dialog" aria-modal="true" aria-labelledby="image-viewer-title" hidden>
+      <div class="image-viewer__backdrop" data-viewer-close></div>
+      <div class="image-viewer__panel">
+        <div class="image-viewer__topbar">
+          <p class="image-viewer__title" id="image-viewer-title">Policy input screen</p>
+          <button class="image-viewer__close" type="button" aria-label="Close image viewer" data-viewer-close>×</button>
+        </div>
+        <div class="image-viewer__stage">
+          <button class="image-viewer__nav image-viewer__nav--previous" type="button" aria-label="Previous image" data-viewer-previous>←</button>
+          <img class="image-viewer__image" alt="" data-viewer-image>
+          <button class="image-viewer__nav image-viewer__nav--next" type="button" aria-label="Next image" data-viewer-next>→</button>
+        </div>
+        <div class="image-viewer__controls">
+          <button type="button" data-viewer-zoom-out aria-label="Zoom out">−</button>
+          <span data-viewer-zoom-level>100%</span>
+          <button type="button" data-viewer-zoom-in aria-label="Zoom in">+</button>
+          <span class="image-viewer__counter" data-viewer-counter>1 / 3</span>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- FEATURES -->
+  <section class="project-section" id="features">
+    <h2 class="project-section__title">Features</h2>
+    <div class="feature-list">
+      <article class="feature-item"><span class="feature-item__index">01</span><div><h3 class="feature-item__name">Policy-level projection</h3><p class="feature-item__desc">Projects individual annuity contracts through their full term.</p></div></article>
+      <article class="feature-item"><span class="feature-item__index">02</span><div><h3 class="feature-item__name">Mortality modelling</h3><p class="feature-item__desc">Applies survival probabilities throughout the projection.</p></div></article>
+      <article class="feature-item"><span class="feature-item__index">03</span><div><h3 class="feature-item__name">Escalating benefits</h3><p class="feature-item__desc">Supports increasing annuity payments over time.</p></div></article>
+      <article class="feature-item"><span class="feature-item__index">04</span><div><h3 class="feature-item__name">Discounting</h3><p class="feature-item__desc">Discounts projected cash flows using valuation assumptions.</p></div></article>
+      <article class="feature-item"><span class="feature-item__index">05</span><div><h3 class="feature-item__name">Reserve calculation</h3><p class="feature-item__desc">Calculates policy-level present values.</p></div></article>
+      <article class="feature-item"><span class="feature-item__index">06</span><div><h3 class="feature-item__name">Sensitivity analysis</h3><p class="feature-item__desc">Tests changes in key assumptions.</p></div></article>
+      <article class="feature-item"><span class="feature-item__index">07</span><div><h3 class="feature-item__name">Automated calculations</h3><p class="feature-item__desc">Reduces manual intervention through structured formulas.</p></div></article>
+      <article class="feature-item"><span class="feature-item__index">08</span><div><h3 class="feature-item__name">Validation checks</h3><p class="feature-item__desc">Cross-checks outputs and intermediate calculations.</p></div></article>
+      <article class="feature-item"><span class="feature-item__index">09</span><div><h3 class="feature-item__name">Portfolio aggregation</h3><p class="feature-item__desc">Aggregates policy-level results into portfolio metrics.</p></div></article>
+    </div>
+  </section>
+
+  <!-- VALIDATION -->
+  <section class="project-section" id="validation">
+    <h2 class="project-section__title">Model Controls &amp; Validation</h2>
+    <p>Validation is treated as part of the calculation, not an afterthought.</p>
+    <ul class="checklist">
+      <li>Age progression checks</li>
+      <li>Policy term checks</li>
+      <li>Survival probability monotonicity</li>
+      <li>Cash-flow timing checks</li>
+      <li>Discount factor checks</li>
+      <li>Reserve reconciliation</li>
+      <li>Input completeness checks</li>
+      <li>Aggregate-to-policy reconciliation</li>
+    </ul>
+  </section>
+
+  <!-- SYNTHETIC RESULTS -->
+  <section class="project-section" id="results">
+    <h2 class="project-section__title">Synthetic Results</h2>
+    <p>All figures below use synthetic demonstration data, not real employer or client data.</p>
+    <div class="results-pair" aria-label="Synthetic result charts">
+      <div class="results-pair__item" tabindex="0" role="img" aria-label="BEL curve">
+        <span class="results-pair__index">01</span>
+        <div class="placeholder-shot">
+          <img class="placeholder-shot__image" src="models/annuity-reserving/BEL%20Curve.png" alt="BEL curve showing synthetic reserve results">
+        </div>
+      </div>
+      <div class="results-pair__connector" aria-hidden="true"><span>VS</span></div>
+      <div class="results-pair__item" tabindex="0" role="img" aria-label="Cashflow curve">
+        <span class="results-pair__index">02</span>
+        <div class="placeholder-shot">
+          <img class="placeholder-shot__image" src="models/annuity-reserving/Cashflow%20Curve.png" alt="Cashflow curve showing synthetic portfolio cash flows">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PYTHON REBUILD -->
+  <section class="project-section" id="python-rebuild">
+    <h2 class="project-section__title">From Excel to Python</h2>
+    <p>The Excel model is the initial calculation framework. A Python rebuild is in development to improve scalability, reproducibility and automated validation.</p>
+    <div class="flow">
+      <span class="flow__step"><span class="flow__index">01</span><span>Excel Model</span></span><span class="flow__arrow" aria-hidden="true">→</span>
+      <span class="flow__step"><span class="flow__index">02</span><span>Validation</span></span><span class="flow__arrow" aria-hidden="true">→</span>
+      <span class="flow__step"><span class="flow__index">03</span><span>Python Rebuild</span></span><span class="flow__arrow" aria-hidden="true">→</span>
+      <span class="flow__step"><span class="flow__index">04</span><span>Automated / Scalable Model</span></span>
+    </div>
+    <div class="stack-pills">
+      <span class="pill">Python</span>
+      <span class="pill">Pandas</span>
+      <span class="pill">NumPy</span>
+      <span class="pill">Matplotlib</span>
+      <span class="pill">Jupyter</span>
+      <span class="pill">Git</span>
+    </div>
+  </section>
+
+  <!-- MODEL AVAILABILITY -->
+  <section class="project-footer">
+    <p>The underlying Excel model is not publicly distributed. Screenshots and examples on this page use a combination of model demonstrations and synthetic data.</p>
+    <a class="back-link" href="index.html#modelling">← Back to Modelling</a>
+  </section>
+
+</main>
+
+<footer class="footer">© <span id="year"></span> Paarth Makkar — built for the actuarial market.</footer>
+
+<script src="annuity-reserving.js"></script>
+</body>
+</html>

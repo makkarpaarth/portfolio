@@ -14,7 +14,9 @@
 
 <header class="nav" id="top">
   <div class="nav__logo" aria-label="Paarth Makkar logo">
-    <span class="nav__logo-mark" aria-hidden="true">Paarth</span>
+    <a href="index.html" aria-label="Go to home page">
+      <span class="nav__logo-mark" aria-hidden="true">Paarth</span>
+    </a>
   </div>
   <nav class="nav__links">
     <a href="#work">Experience</a>
@@ -208,23 +210,17 @@
       <h2 class="section-title">Modelling</h2>
     </div>
     <div class="model-grid" id="model-grid">
-      <article class="model-card">
+      <a class="model-card model-card--link" href="annuity-reserving.html">
         <div class="model-card__chart" data-chart="reserve"></div>
-        <h3 class="model-card__title">Non-Life Reserving Engine</h3>
-        <p class="model-card__desc">Chain-ladder and Bornhuetter-Ferguson triangles automated in Python for a Lloyd's syndicate audit.</p>
-        <div class="model-card__tags"><span>Python</span><span>Solvency II</span></div>
-      </article>
+        <h3 class="model-card__title">Annuity Reserving Model</h3>
+        <p class="model-card__desc">Excel-based actuarial model projecting annuity cash flows, survival benefits and reserves under configurable policy assumptions.</p>
+        <div class="model-card__tags"><span>Excel</span><span>Reserving</span><span>Mortality</span></div>
+        <span class="model-card__cta">View case study →</span>
+      </a>
       <article class="model-card">
         <div class="model-card__chart" data-chart="unitlinked"></div>
-        <h3 class="model-card__title">Unit-Linked Life Model</h3>
-        <p class="model-card__desc">Projection model for a unit-linked product, version-controlled and peer-reviewed on GitHub.</p>
-        <div class="model-card__tags"><span>Python</span><span>GitHub</span><span>Life</span></div>
-      </article>
-      <article class="model-card">
-        <div class="model-card__chart" data-chart="workflow"></div>
-        <h3 class="model-card__title">AI-Assisted Audit Workflow</h3>
-        <p class="model-card__desc">LLM-assisted automation cutting recurring audit prep time by up to 12x.</p>
-        <div class="model-card__tags"><span>Automation</span><span>VBA</span><span>AI</span></div>
+        <h3 class="model-card__title">More to come...</h3>
+        <a class="model-card__cta" href="#contact">View case study →</a>
       </article>
     </div>
   </section>
