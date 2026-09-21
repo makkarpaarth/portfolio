@@ -1,5 +1,12 @@
 document.getElementById('year').textContent = new Date().getFullYear();
 
+const experienceYears = document.getElementById('experience-years');
+if (experienceYears) {
+  const experienceStart = new Date('2024-06-01');
+  const years = (Date.now() - experienceStart.getTime()) / (365.25 * 24 * 60 * 60 * 1000);
+  experienceYears.textContent = `~ ${years.toFixed(1)} years`;
+}
+
 const backToTop = document.querySelector('a[href="#top"]');
 if (backToTop) {
   backToTop.addEventListener('click', event => {
