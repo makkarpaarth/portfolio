@@ -109,33 +109,200 @@ function animateCount(el){
 
 /* exam branch cards expand on hover — pure CSS, no JS needed */
 
-/* ================= Quiet animated visuals on model rows ================= */
-function modelVisual(type){
-  const visuals = {
-    reserve: `<svg class="model-visual model-visual--reserve" viewBox="0 0 260 90" preserveAspectRatio="none" aria-hidden="true">
-      <path class="model-visual__axis" d="M8 78H252"/>
-      <path class="model-visual__curve" pathLength="1" d="M8 69C38 65 46 46 72 43S108 54 130 39s39-24 58-19 26 13 64-11"/>
-      <circle class="model-visual__marker" cx="130" cy="39" r="3"/>
-    </svg>`,
-    unitlinked: `<svg class="model-visual model-visual--unitlinked" viewBox="0 0 260 90" preserveAspectRatio="none" aria-hidden="true">
-      <path class="model-visual__axis" d="M8 78H252"/>
-      <path class="model-visual__curve" pathLength="1" d="M8 65C31 58 42 37 65 42s27 21 48 10 28-34 50-30 26 22 43 17 28-22 46-29"/>
-      <path class="model-visual__projection" d="M168 22V78"/>
-      <circle class="model-visual__marker" cx="168" cy="22" r="3"/>
-    </svg>`,
-    workflow: `<svg class="model-visual model-visual--workflow" viewBox="0 0 260 90" preserveAspectRatio="none" aria-hidden="true">
-      <path class="model-visual__axis" d="M18 45H242"/>
-      <circle class="model-visual__node" cx="34" cy="45" r="7"/>
-      <circle class="model-visual__node" cx="130" cy="45" r="7"/>
-      <circle class="model-visual__node" cx="226" cy="45" r="7"/>
-      <path class="model-visual__pulse" d="M34 45H226"/>
-      <path class="model-visual__tick" d="M72 38l7 7-7 7M168 38l7 7-7 7"/>
-    </svg>`
-  };
-  return visuals[type] || visuals.reserve;
+/* ================= Model card visuals: animated Monte-Carlo fan-chart projection ================= */
+function initModelVisual(canvas, seed){
+  const ctx = canvas.getContext('2d');
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const teal = getComputedStyle(document.documentElement).getPropertyValue('--teal').trim() || '#35C9B0';
+  const gold = getComputedStyle(document.documentElement).getPropertyValue('--gold').trim() || '#C9A24B';
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  let w, h, cssW, cssH;
+  function resize(){
+    cssW = canvas.clientWidth || canvas.parentElement.clientWidth;
+    cssH = canvas.clientHeight || 90;
+    canvas.width = cssW * dpr;
+    canvas.height = cssH * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    w = cssW; h = cssH;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  // Deterministic pseudo-random so each card's paths differ but stay stable
+  let s = seed;
+  function rand(){ s = (s * 9301 + 49297) % 233280; return s / 233280; }
+
+  const histEnd = w * 0.42;      // where "known" history ends and projection fans out
+  const baseY = h * 0.62;
+  const pointCount = 22;
+  const histPoints = [];
+  const projPaths = []; // several stochastic sample paths after histEnd
+
+  // Build a smooth historical curve (upward actuarial trend)
+  for (let i = 0; i <= pointCount; i++){
+    const x = (histEnd / pointCount) * i;
+    const t = i / pointCount;
+    const y = baseY - t * (h * 0.28) - Math.sin(t * Math.PI * 1.6) * 6 + (rand() - 0.5) * 3;
+    histPoints.push({ x, y });
+  }
+  const lastHist = histPoints[histPoints.length - 1];
+
+  // Build N stochastic projection paths (like actuarial scenario testing) fanning outward
+  const pathCount = 5;
+  for (let p = 0; p < pathCount; p++){
+    const drift = (rand() - 0.35) * 0.9;     // slight upward bias, some paths dip
+    const vol = 4 + rand() * 7;
+    const pts = [{ x: lastHist.x, y: lastHist.y }];
+    const steps = 16;
+    for (let i = 1; i <= steps; i++){
+      const t = i / steps;
+      const x = lastHist.x + (w - lastHist.x) * t;
+      const walk = (rand() - 0.5) * vol;
+      const prevY = pts[pts.length - 1].y;
+      let y = prevY + walk - drift * 1.4;
+      y = Math.max(h * 0.08, Math.min(h * 0.92, y));
+      pts.push({ x, y });
+    }
+    projPaths.push(pts);
+  }
+
+  function drawSmoothPath(pts, strokeStyle, lineWidth, alpha){
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.strokeStyle = strokeStyle;
+    ctx.lineWidth = lineWidth;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x, pts[0].y);
+    for (let i = 0; i < pts.length - 1; i++){
+      const p0 = pts[i - 1] || pts[i];
+      const p1 = pts[i];
+      const p2 = pts[i + 1];
+      const p3 = pts[i + 2] || p2;
+      const cp1x = p1.x + (p2.x - p0.x) / 6;
+      const cp1y = p1.y + (p2.y - p0.y) / 6;
+      const cp2x = p2.x - (p3.x - p1.x) / 6;
+      const cp2y = p2.y - (p3.y - p1.y) / 6;
+      ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, p2.x, p2.y);
+    }
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // Precompute a "settled" fan envelope (min/max across sample paths at each x) for the shaded cone
+  const envelopeSteps = 16;
+  function envelopeAt(alpha){
+    const upper = [], lower = [];
+    for (let i = 0; i <= envelopeSteps; i++){
+      let minY = Infinity, maxY = -Infinity, x = 0;
+      projPaths.forEach(path => {
+        const pt = path[Math.min(i, path.length - 1)];
+        x = pt.x;
+        minY = Math.min(minY, pt.y);
+        maxY = Math.max(maxY, pt.y);
+      });
+      const t = i / envelopeSteps;
+      const grow = 0.35 + 0.65 * t; // cone narrower near histEnd, wider further out — animated via alpha
+      const mid = (minY + maxY) / 2;
+      upper.push({ x, y: mid - (mid - minY) * grow * alpha });
+      lower.push({ x, y: mid + (maxY - mid) * grow * alpha });
+    }
+    return { upper, lower };
+  }
+
+  let start = null;
+  const cycleMs = 6500;
+
+  function frame(ts){
+    if (start === null) start = ts;
+    const elapsed = (ts - start) % cycleMs;
+    const phase = elapsed / cycleMs; // 0 -> 1 loop
+
+    // draw-in phase for history (0 - 0.28), fan reveal (0.15 - 0.55), settle+shimmer (0.55 - 1)
+    const histReveal = Math.min(1, phase / 0.28);
+    const fanReveal = Math.max(0, Math.min(1, (phase - 0.15) / 0.4));
+    const shimmerT = Math.max(0, (phase - 0.55) / 0.45);
+
+    ctx.clearRect(0, 0, w, h);
+
+    // baseline axis
+    ctx.strokeStyle = 'rgba(133,146,172,0.25)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(4, h - 6);
+    ctx.lineTo(w - 4, h - 6);
+    ctx.stroke();
+
+    // historical curve, revealed left-to-right
+    const revealCount = Math.max(2, Math.floor(histPoints.length * histReveal));
+    drawSmoothPath(histPoints.slice(0, revealCount), teal, 2, 1);
+
+    if (fanReveal > 0){
+      // shaded uncertainty cone
+      const { upper, lower } = envelopeAt(fanReveal);
+      ctx.save();
+      ctx.globalAlpha = 0.16 * fanReveal;
+      ctx.fillStyle = teal;
+      ctx.beginPath();
+      ctx.moveTo(upper[0].x, upper[0].y);
+      upper.forEach(pt => ctx.lineTo(pt.x, pt.y));
+      for (let i = lower.length - 1; i >= 0; i--) ctx.lineTo(lower[i].x, lower[i].y);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+
+      // faint individual scenario paths
+      projPaths.forEach((path, idx) => {
+        const count = Math.max(2, Math.floor(path.length * fanReveal));
+        drawSmoothPath(path.slice(0, count), idx === 0 ? gold : teal, 1, idx === 0 ? 0.55 : 0.22);
+      });
+
+      // traveling marker along the "expected" (first/central) path once fan is mostly drawn
+      if (shimmerT > 0 || fanReveal >= 0.98){
+        const centralPath = projPaths[0];
+        const travel = reduced ? 0.5 : (0.15 + 0.85 * Math.min(1, shimmerT + 0.15));
+        const idxF = travel * (centralPath.length - 1);
+        const i0 = Math.floor(idxF), i1 = Math.min(centralPath.length - 1, i0 + 1);
+        const tt = idxF - i0;
+        const mx = centralPath[i0].x + (centralPath[i1].x - centralPath[i0].x) * tt;
+        const my = centralPath[i0].y + (centralPath[i1].y - centralPath[i0].y) * tt;
+        ctx.save();
+        ctx.fillStyle = gold;
+        ctx.beginPath();
+        ctx.arc(mx, my, 3, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 0.35;
+        ctx.beginPath();
+        ctx.arc(mx, my, 6, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    // marker at the historical/projection junction
+    ctx.save();
+    ctx.fillStyle = teal;
+    ctx.beginPath();
+    ctx.arc(lastHist.x, lastHist.y, 2.6, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+    if (!reduced) requestAnimationFrame(frame);
+  }
+
+  if (reduced){
+    frame(cycleMs); // draw one static, fully-settled frame
+  } else {
+    requestAnimationFrame(frame);
+  }
 }
-document.querySelectorAll('.model-card__chart').forEach(el => {
-  el.innerHTML = modelVisual(el.dataset.chart);
+
+document.querySelectorAll('.model-card__chart').forEach((el, i) => {
+  const canvas = document.createElement('canvas');
+  el.appendChild(canvas);
+  initModelVisual(canvas, 1000 + i * 777);
 });
 
-/* ================= Blog: moved to blog.html / blog.js ================= */
+/* ================= Actuarial Science page: see actuarial-science.html / actuarial-science.js ================= */
