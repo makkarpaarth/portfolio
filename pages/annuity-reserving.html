@@ -19,14 +19,19 @@
       <span class="nav__logo-mark" aria-hidden="true">Paarth</span>
     </a>
   </div>
-  <nav class="nav__links">
-    <a href="../index.html#work">Experience</a>
-    <a href="../index.html#exams">Exams</a>
-    <a href="../index.html#modelling">Modelling</a>
-    <a href="actuarial-science.html">Blog</a>
-    <a href="../index.html#contact">Contact</a>
-    <a class="nav__linkedin" href="https://www.linkedin.com/in/paarthmakkar" target="_blank" rel="noopener noreferrer" aria-label="Visit Paarth Makkar on LinkedIn">LinkedIn</a>
-  </nav>
+  <div class="nav__menu">
+    <button class="nav__menu-toggle" type="button" aria-label="Navigation menu" aria-expanded="false" aria-controls="nav-links">
+      <span aria-hidden="true">•••</span>
+    </button>
+    <nav class="nav__links" id="nav-links" aria-label="Main navigation">
+      <a href="../index.html#work">Experience</a>
+      <a href="../index.html#exams">Exams</a>
+      <a href="../index.html#modelling">Modelling</a>
+      <a href="actuarial-science.html">Blog</a>
+      <a href="../index.html#contact">Contact</a>
+      <a class="nav__linkedin" href="https://www.linkedin.com/in/paarthmakkar" target="_blank" rel="noopener noreferrer" aria-label="Visit Paarth Makkar on LinkedIn">LinkedIn</a>
+    </nav>
+  </div>
 </header>
 
 <main>
@@ -232,5 +237,6 @@
 <footer class="footer">© <span id="year"></span> Paarth Makkar — built for the actuarial market.</footer>
 
 <script src="../assets/js/annuity-reserving.js"></script>
+<script src="../assets/js/nav.js"></script>
 </body>
 </html>
