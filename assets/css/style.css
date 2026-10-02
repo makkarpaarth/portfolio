@@ -686,3 +686,77 @@ body.viewer-open{overflow:hidden;}
   .image-viewer__image{max-width:calc(100% - 5rem);max-height:calc(100% - 2rem);}
   .image-viewer__nav--previous{left:.4rem;}.image-viewer__nav--next{right:.4rem;}
 }
+
+@media (max-width:720px){
+  .nav{
+    flex-wrap:wrap;
+    gap:.25rem .75rem;
+    padding:.65rem 1rem;
+  }
+  .nav__logo{height:36px;}
+  .nav__links{
+    flex:1 0 100%;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:.1rem .55rem;
+  }
+  .nav__links a{
+    display:inline-flex;
+    align-items:center;
+    min-height:40px;
+    padding:.25rem .15rem;
+    font-size:.76rem;
+  }
+  .nav__links .nav__linkedin{padding:.25rem .7rem;}
+
+  section[id]{scroll-margin-top:9rem;}
+
+  .hero{
+    min-height:100vh;
+    min-height:100svh;
+    padding:10rem 1.25rem 3rem;
+  }
+  .hero__text{width:100%;min-width:0;}
+  .hero__eyebrow{font-size:.78rem;line-height:1.5;}
+  .hero__title{
+    max-width:100%;
+    font-size:clamp(2.75rem,13vw,5rem);
+    overflow-wrap:anywhere;
+  }
+  .hero__lede{font-size:1rem;margin-bottom:2rem;}
+  .hero__actions{width:min(100%,22rem);gap:.7rem;}
+  .hero__actions .btn{
+    flex:1 1 10rem;
+    min-height:48px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:.8rem 1rem;
+  }
+
+  .exams__inner{padding:0 1.25rem;}
+  .branch-grid{grid-template-columns:minmax(0,1fr);}
+  .branch{padding:1.4rem;}
+  .branch__exams{max-height:10rem;opacity:1;margin-top:1.2rem;}
+
+  .timeline,.modelling{padding:3.5rem 1.25rem;}
+  .timeline__layout{grid-template-columns:minmax(0,1fr);}
+  .timeline__main,.timeline__skills{min-width:0;}
+  .timeline__list{padding:0 0 0 1.7rem;}
+  .timeline__list::before{left:5px;}
+  .tl-item::before{left:-1.7rem;}
+  .certs{padding:0 0 0 1.7rem;}
+}
+
+@media (max-width:720px) and (hover:none){
+  .branch:hover{transform:none;box-shadow:none;}
+  .model-card:hover{transform:none;}
+}
+
+@media (max-width:420px){
+  .nav__links{justify-content:flex-start;}
+  .hero{padding-right:1rem;padding-left:1rem;}
+  .contact{padding-right:1.25rem;padding-left:1.25rem;}
+  .contact__resume{font-size:.68rem;padding:.9rem .8rem;gap:.55rem;}
+  .contact__detail a,.footer__base a{overflow-wrap:anywhere;}
+}
