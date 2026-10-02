@@ -1,0 +1,114 @@
+:root{
+  --bg:#0A0F1C;
+  --bg-alt:#0F1830;
+  --surface:#121D38;
+  --border:#20304F;
+  --text:#EAF0F6;
+  --muted:#8592AC;
+  --gold:#C9A24B;
+  --teal:#35C9B0;
+  --violet:#8C7AE6;
+  --serif:'Fraunces', serif;
+  --mono:'JetBrains Mono', monospace;
+  --sans:'Inter', sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--sans);
+  line-height:1.6;
+  overflow-x:hidden;
+}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto;}
+  *{animation-duration:0.01ms !important; transition-duration:0.01ms !important;}
+}
+
+a{color:inherit;text-decoration:none;}
+:focus-visible{outline:2px solid var(--teal);outline-offset:3px;}
+
+#bg-curve{
+  position:fixed;inset:0;
+  width:100%;height:100%;
+  z-index:0;
+  opacity:0.55;
+  pointer-events:none;
+}
+
+main, .nav, .footer{position:relative;z-index:1;}
+
+.nav{
+  position:fixed;top:0;left:0;right:0;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:1.4rem clamp(1.5rem,5vw,4rem);
+  z-index:10;
+  backdrop-filter:blur(10px);
+  background:rgba(10,15,28,0.55);
+  border-bottom:1px solid var(--border);
+}
+.nav__logo{height:42px;display:grid;place-items:center;flex:0 0 auto;cursor:default;}
+.nav__logo-mark{
+  position:relative;font-family:var(--sans);font-size:1.2rem;font-weight:800;
+  letter-spacing:-.11em;color:#fff;line-height:1;transition:transform .2s ease;
+}
+.nav__logo-mark::after{
+  content:'';position:absolute;width:6px;height:6px;border-radius:50%;
+  background:var(--teal);right:-10px;top:-4px;box-shadow:0 0 0 3px rgba(53,201,176,.12);
+  animation:logo-shine 2.8s ease-in-out infinite;
+}
+.nav__logo:hover .nav__logo-mark{transform:translateY(-1px);}
+@keyframes logo-shine{0%,100%{box-shadow:0 0 0 3px rgba(53,201,176,.12),0 0 0 rgba(53,201,176,0);}50%{box-shadow:0 0 0 5px rgba(53,201,176,.08),0 0 12px rgba(53,201,176,.75);}}
+.nav__links{display:flex;align-items:center;gap:clamp(1rem,3vw,2.2rem);}
+.nav__links a{font-size:0.9rem;color:var(--muted);transition:color .2s;}
+.nav__links a:hover{color:var(--teal);}
+.nav__links .nav__linkedin{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:0.48rem 1rem;border-radius:999px;
+  color:var(--teal);background:transparent;border:1px solid var(--teal);font-weight:600;
+  box-shadow:none;
+  transition:transform .2s ease,background .2s ease,color .2s ease,box-shadow .2s ease;
+}
+.nav__links .nav__linkedin:hover{color:#071713;background:var(--teal);transform:translateY(-2px);box-shadow:0 9px 22px -8px rgba(53,201,176,.7);}
+
+.btn{
+  display:inline-block;
+  padding:0.85rem 1.6rem;
+  border-radius:2px;
+  font-size:0.92rem;
+  font-weight:500;
+  cursor:pointer;
+  border:1px solid transparent;
+  transition:transform .15s ease, background .2s ease, border-color .2s ease;
+}
+.btn:hover{transform:translateY(-2px);}
+.btn--primary{background:var(--gold);color:#12100A;}
+.btn--primary:hover{background:#dcb865;}
+.btn--ghost{background:transparent;color:var(--text);border-color:var(--border);}
+.btn--ghost:hover{border-color:var(--teal);color:var(--teal);}
+
+.pill{
+  font-family:var(--mono);font-size:0.7rem;color:var(--muted);
+  border:1px solid var(--border);padding:0.3rem 0.7rem;border-radius:999px;
+}
+.pill--glow{color:var(--accent);border-color:var(--accent);box-shadow:0 0 10px -2px var(--accent);}
+
+.footer{
+  padding:2.8rem clamp(1.5rem,8vw,8rem) 1.5rem;color:var(--muted);
+  font-size:0.78rem;border-top:1px solid var(--border);
+}
+.footer__inner,.footer__base{max-width:1180px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:2rem;}
+.footer__inner{padding-bottom:2.5rem;}
+.footer__identity{display:flex;flex-direction:column;gap:.45rem;}
+.footer__name{font-family:var(--serif);font-size:1.1rem;color:var(--text);}
+.footer__links{display:flex;align-items:center;justify-content:flex-end;gap:1.4rem;flex-wrap:wrap;}
+.footer__links a{color:var(--text);transition:color .2s ease;}
+.footer__links a:hover,.footer__base a:hover{color:var(--teal);}
+.footer__base{padding-top:1.3rem;border-top:1px solid var(--border);font-size:.72rem;}
+.footer__base a{transition:color .2s ease;}
+@media (max-width:720px){
+  .footer__inner,.footer__base{align-items:flex-start;flex-direction:column;gap:1.3rem;}
+  .footer__links{justify-content:flex-start;gap:.8rem 1.1rem;}
+  .footer__inner{padding-bottom:2rem;}
+}
