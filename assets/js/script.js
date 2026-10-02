@@ -305,4 +305,4 @@ document.querySelectorAll('.model-card__chart').forEach((el, i) => {
   initModelVisual(canvas, 1000 + i * 777);
 });
 
-/* ================= Actuarial Science page: see actuarial-science.html / actuarial-science.js ================= */
+/* ================= Actuarial Science page: see pages/actuarial-science/ / actuarial-science.js ================= */
