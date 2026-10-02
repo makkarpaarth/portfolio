@@ -35,7 +35,7 @@
   <section class="project-hero">
     <p class="project-hero__eyebrow">Models · Case Study</p>
     <h1 class="project-hero__title">Annuity Reserving Model</h1>
-    <p class="project-hero__lede">An Excel-based actuarial model for projecting annuity cash flows, survival benefits and policy-level reserves — built with configurable mortality, discounting and policy assumptions, and a Python rebuild in progress.</p>
+    <p class="project-hero__lede">An Excel based actuarial model for projecting annuity cashflows, survival benefits and policy-level reserves; built with configurable mortality, discounting and policy assumptions, and a Python rebuild in progress.</p>
     <div class="project-hero__tags">
       <span class="pill">Excel</span>
       <span class="pill">Actuarial Modelling</span>
@@ -48,7 +48,7 @@
   <!-- OVERVIEW -->
   <section class="project-section" id="overview">
     <h2 class="project-section__title">Overview</h2>
-    <p>I built an Excel-based actuarial model to project future annuity cash flows and calculate policy-level reserves under specified mortality, interest-rate and policy assumptions. The model is organised as a single directional pipeline, from raw policy data through to a portfolio-level reserve summary.</p>
+    <p>I built an Excel based actuarial model to project future annuity cash flows and calculate policy level reserves under specified mortality, interest-rate and policy assumptions. The model is organised as a single directional pipeline, from raw policy data through to a policy level reserve summary.</p>
     <div class="flow">
       <span class="flow__step"><span class="flow__index">01</span><span>Policy Data</span></span><span class="flow__arrow" aria-hidden="true">→</span>
       <span class="flow__step"><span class="flow__index">02</span><span>Assumptions</span></span><span class="flow__arrow" aria-hidden="true">→</span>
@@ -63,7 +63,7 @@
   <!-- ACTUARIAL MATHEMATICS -->
   <section class="project-section" id="mathematics">
     <h2 class="project-section__title">Actuarial Mathematics</h2>
-    <p>The reserve isn't one formula — it's five steps chained together, each feeding the next, mirroring how the model's BEL sheet actually walks each policy forward year by year. Starting from age- and sex-specific mortality, the model builds up the odds a policyholder is still alive in each future year, uses that to weight every cash flow — premiums coming in, expenses, commission and annuity payments going out — discounts each by the forward yield curve, and sums the result into a single best-estimate liability per policy.</p>
+    <p>The reserve isn't one formula - it's five steps chained together, each feeding the next, mirroring how the model's BEL sheet actually walks each policy forward year by year. Starting from age and sex specific mortality, the model builds up the odds a policyholder is still alive in each future year, uses that to weight every cash flow - premiums coming in, expenses, commission and annuity payments paid out - discounts each by the forward yield curve, and sums the result into a single best-estimate liability (BEL) per policy.</p>
 
     <div class="formula-chain" aria-label="Annuity reserving formula chain">
       <div class="formula-chain__nodes" role="tablist" aria-label="Formula steps">
@@ -100,7 +100,7 @@
           <span class="formula-detail__equation">qₓ₊ₖ (male / female)</span>
         </div>
         <div class="formula-detail__copy">
-          <p class="formula-detail__meaning">The single-year mortality rate at each attained age, held separately by sex.</p>
+          <p class="formula-detail__meaning">The single year mortality rate at each attained age, held separately by sex.</p>
           <p class="formula-detail__symbols"><strong>Symbols</strong> <span>q = mortality rate · x = age at entry · k = future year</span></p>
         </div>
       </div>
@@ -110,8 +110,8 @@
 
   <!-- EXCEL SCREENSHOTS -->
   <section class="project-section" id="screenshots">
-    <h2 class="project-section__title">Excel Model — Selected Views</h2>
-    <p>A sanitised look at the input interface, assumption module and projection table. The underlying workbook itself isn't distributed publicly.</p>
+    <h2 class="project-section__title">Excel Model - Selected Views</h2>
+    <p>The following screenshots provide an overview of the input interface, assumption module and projection table. The underlying Excel workbook is available selectively upon request.</p>
 
     <div class="placeholder-gallery" aria-label="Excel model selected views">
       <div class="placeholder-shot placeholder-shot--image" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Open policy input screen in image viewer">
