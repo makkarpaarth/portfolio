@@ -36,9 +36,10 @@
   <section class="project-hero">
     <p class="project-hero__eyebrow">Models · Case Study</p>
     <h1 class="project-hero__title">Annuity Reserving Model</h1>
-    <p class="project-hero__lede">An Excel based actuarial model for projecting annuity cashflows, survival benefits and policy-level reserves; built with configurable mortality, discounting and policy assumptions, and a Python rebuild in progress.</p>
+    <p class="project-hero__lede">An actuarial model for projecting annuity cashflows, survival benefits and policy-level reserves; built in Excel with configurable mortality, discounting and policy assumptions, and rebuilt in Python for scalable, multi-run execution.</p>
     <div class="project-hero__tags">
       <span class="pill">Excel</span>
+      <span class="pill">Python</span>
       <span class="pill">Actuarial Modelling</span>
       <span class="pill">Reserving</span>
       <span class="pill">Mortality</span>
@@ -205,12 +206,12 @@
   <!-- PYTHON REBUILD -->
   <section class="project-section" id="python-rebuild">
     <h2 class="project-section__title">From Excel to Python</h2>
-    <p>The Excel model is the initial calculation framework. A Python rebuild is in development to improve scalability, reproducibility and automated validation.</p>
+    <p>The Excel model was the initial calculation framework. The Python rebuild is now live: Excel remains the front-end for assumptions and configuration, while a Python engine does the heavy lifting behind it.</p>
     <div class="flow">
       <span class="flow__step"><span class="flow__index">01</span><span>Excel Model</span></span><span class="flow__arrow" aria-hidden="true">→</span>
       <span class="flow__step"><span class="flow__index">02</span><span>Validation</span></span><span class="flow__arrow" aria-hidden="true">→</span>
       <span class="flow__step"><span class="flow__index">03</span><span>Python Rebuild</span></span><span class="flow__arrow" aria-hidden="true">→</span>
-      <span class="flow__step"><span class="flow__index">04</span><span>Automated / Scalable Model</span></span>
+      <span class="flow__step"><span class="flow__index">04</span><span>Scalable Python Model</span></span>
     </div>
     <div class="stack-pills">
       <span class="pill">Python</span>
@@ -219,18 +220,90 @@
       <span class="pill">Matplotlib</span>
       <span class="pill">Jupyter</span>
       <span class="pill">Git</span>
+      <span class="pill">VBA</span>
+      <span class="pill">JSON</span>
+    </div>
+  </section>
+
+  <!-- WHY PYTHON -->
+  <section class="project-section" id="python-why">
+    <h2 class="project-section__title">Why Python Implementation?</h2>
+    <p>Excel is excellent for transparency, but a policy-by-policy, year-by-year projection hits its limits quickly on large portfolios. Moving the engine to Python keeps the same actuarial logic while removing those limits.</p>
+    <div class="feature-list">
+      <article class="feature-item reveal"><span class="feature-item__index">01</span><div><h3 class="feature-item__name">Scale</h3><p class="feature-item__desc">Handles massive portfolios that would crash or crawl in Excel.</p></div></article>
+      <article class="feature-item reveal"><span class="feature-item__index">02</span><div><h3 class="feature-item__name">Vectorised speed</h3><p class="feature-item__desc">NumPy arrays project every policy at once instead of cell by cell.</p></div></article>
+      <article class="feature-item reveal"><span class="feature-item__index">03</span><div><h3 class="feature-item__name">Multi-run efficiency</h3><p class="feature-item__desc">Up to 10 configurations, base and stressed, run in a single click.</p></div></article>
+      <article class="feature-item reveal"><span class="feature-item__index">04</span><div><h3 class="feature-item__name">Reproducibility</h3><p class="feature-item__desc">Every run is defined by an exported JSON config and a fixed virtual environment.</p></div></article>
+      <article class="feature-item reveal"><span class="feature-item__index">05</span><div><h3 class="feature-item__name">Automation</h3><p class="feature-item__desc">VBA triggers the full pipeline, so no manual copy-paste between steps.</p></div></article>
+      <article class="feature-item reveal"><span class="feature-item__index">06</span><div><h3 class="feature-item__name">Familiar front-end</h3><p class="feature-item__desc">Assumptions and settings stay in Excel; results return as Excel files.</p></div></article>
+    </div>
+  </section>
+
+  <!-- PYTHON FEATURES -->
+  <section class="project-section" id="python-features">
+    <h2 class="project-section__title">Python Model Features</h2>
+    <div class="feature-list">
+      <article class="feature-item reveal"><span class="feature-item__index">01</span><div><h3 class="feature-item__name">Multi-run engine</h3><p class="feature-item__desc">Up to 10 model runs executed together, each with its own name and settings.</p></div></article>
+      <article class="feature-item reveal"><span class="feature-item__index">02</span><div><h3 class="feature-item__name">Mortality &amp; interest stresses</h3><p class="feature-item__desc">Fixed and relative shocks to mortality rates and the yield curve, per run.</p></div></article>
+      <article class="feature-item reveal"><span class="feature-item__index">03</span><div><h3 class="feature-item__name">Debug view</h3><p class="feature-item__desc">Policyholder-level projection for up to 10 policies: time points, duration in force, mortality rates, premium, expense, commission, survival benefit, cash flows, present values and BEL.</p></div></article>
+      <article class="feature-item reveal"><span class="feature-item__index">04</span><div><h3 class="feature-item__name">Aggregate view</h3><p class="feature-item__desc">Portfolio-wide amounts, cash flows, present values and BEL.</p></div></article>
+      <article class="feature-item reveal"><span class="feature-item__index">05</span><div><h3 class="feature-item__name">Summary view</h3><p class="feature-item__desc">Time 0 BEL for every policyholder, shown alongside policy information in one table.</p></div></article>
+      <article class="feature-item reveal"><span class="feature-item__index">06</span><div><h3 class="feature-item__name">Excel assumption loader</h3><p class="feature-item__desc">Yield curve, mortality, expenses, commission and inflation tabs, loaded from CSV with one click.</p></div></article>
+    </div>
+  </section>
+
+  <!-- PYTHON WORKFLOW -->
+  <section class="project-section" id="python-workflow">
+    <h2 class="project-section__title">How a Run Works</h2>
+    <p>The whole run is driven from the Parameters workbook. Python and pandas stay behind the scenes.</p>
+    <ol class="py-steps">
+      <li class="py-step reveal"><span class="py-step__index">01</span><h3>Assumptions</h3><p>Enter tables under each assumption tab.</p></li>
+      <li class="py-step reveal"><span class="py-step__index">02</span><h3>Configure</h3><p>Set runs, stresses and views on the Parameters tab.</p></li>
+      <li class="py-step reveal"><span class="py-step__index">03</span><h3>Export JSON</h3><p>Config and assumptions are written out.</p></li>
+      <li class="py-step reveal"><span class="py-step__index">04</span><h3>Run Model</h3><p>VBA starts Python in a virtual environment.</p></li>
+      <li class="py-step reveal"><span class="py-step__index">05</span><h3>Project</h3><p>NumPy vectorises the projection across all policies.</p></li>
+      <li class="py-step reveal"><span class="py-step__index">06</span><h3>Output</h3><p>pandas consolidates results into Excel files.</p></li>
+    </ol>
+  </section>
+
+  <!-- PYTHON SCREENSHOTS -->
+  <section class="project-section" id="python-screenshots">
+    <h2 class="project-section__title">Python Model - Selected Views</h2>
+    <p>The Excel front-end that controls the Python engine, followed by the three output views.</p>
+    <div class="placeholder-gallery placeholder-gallery--four" aria-label="Python model selected views">
+      <div class="placeholder-shot placeholder-shot--image" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Open Parameters front-end in image viewer">
+        <img class="placeholder-shot__image" src="../../assets/images/models/annuity-reserving/python-parameters.png" alt="Parameters workbook showing multi-run configuration, stresses, views and assumption loader">
+      </div>
+      <div class="placeholder-shot placeholder-shot--image" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Open Debug output in image viewer">
+        <img class="placeholder-shot__image" src="../../assets/images/models/annuity-reserving/debug-output.png" alt="Debug output showing policyholder-level projection results">
+      </div>
+      <div class="placeholder-shot placeholder-shot--image" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Open Aggregate output in image viewer">
+        <img class="placeholder-shot__image" src="../../assets/images/models/annuity-reserving/aggregate-output.png" alt="Aggregate output showing portfolio-level results">
+      </div>
+      <div class="placeholder-shot placeholder-shot--image" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Open Summary output in image viewer">
+        <img class="placeholder-shot__image" src="../../assets/images/models/annuity-reserving/summary-output.png" alt="Summary output showing time 0 BEL for each policyholder">
+      </div>
+    </div>
+  </section>
+
+  <!-- ACCESS -->
+  <section class="project-section" id="python-access">
+    <h2 class="project-section__title">Access &amp; Sharing</h2>
+    <div class="flag">
+      <span class="flag__icon" aria-hidden="true">!</span>
+      <p>This framework is shared <strong>solely at the discretion of the maker</strong>. The creator reserve the right to decide whom the model is shared with, and it is not publicly distributed.</p>
     </div>
   </section>
 
   <!-- MODEL AVAILABILITY -->
   <section class="project-footer">
-    <p>The underlying Excel model is not publicly distributed. Screenshots and examples on this page use a combination of model demonstrations and synthetic data.</p>
+    <p>The underlying Excel and Python models are not publicly distributed. Screenshots and examples on this page use a combination of model demonstrations and synthetic data.</p>
     <a class="back-link" href="../../#modelling">← Back to Modelling</a>
   </section>
 
 </main>
 
-<footer class="footer">© <span id="year"></span> Paarth Makkar - built for the actuarial market.</footer>
+<footer class="footer">© <span id="year"></span> Paarth Makkar - Integrating Python and Actuarial Science.</footer>
 
 <script src="annuity-reserving.js"></script>
 </body>
