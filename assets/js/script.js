@@ -109,200 +109,118 @@ function animateCount(el){
 
 /* exam branch cards expand on hover — pure CSS, no JS needed */
 
-/* ================= Model card visuals: animated Monte-Carlo fan-chart projection ================= */
-function initModelVisual(canvas, seed){
+/* ================= Model card visuals: survival-weighted cash flows + reserve run-off ================= */
+function initModelVisual(canvas, variant){
   const ctx = canvas.getContext('2d');
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
-  const teal = getComputedStyle(document.documentElement).getPropertyValue('--teal').trim() || '#35C9B0';
-  const gold = getComputedStyle(document.documentElement).getPropertyValue('--gold').trim() || '#C9A24B';
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const teal = css('--teal') || '#35C9B0', gold = css('--gold') || '#C9A24B', muted = css('--muted') || '#8592AC';
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const N = 26, cycleMs = 7000;
+  const ease = t => 1 - Math.pow(1 - t, 3);
+  const clamp01 = v => Math.max(0, Math.min(1, v));
 
-  let w, h, cssW, cssH;
+  // Annuity payments weighted by survival probability, and remaining reserve (PV of future payments)
+  const bars = [], reserve = [];
+  for (let i = 0; i < N; i++) bars.push(Math.exp(-2.3 * Math.pow(i / N, 1.7)));
+  for (let i = 0; i < N; i++) reserve.push(bars.slice(i).reduce((a, b) => a + b, 0));
+  const rMax = reserve[0];
+  for (let i = 0; i < N; i++) reserve[i] /= rMax;
+
+  let w, h;
   function resize(){
-    cssW = canvas.clientWidth || canvas.parentElement.clientWidth;
-    cssH = canvas.clientHeight || 90;
-    canvas.width = cssW * dpr;
-    canvas.height = cssH * dpr;
+    w = canvas.clientWidth || canvas.parentElement.clientWidth;
+    h = canvas.clientHeight || 90;
+    canvas.width = w * dpr; canvas.height = h * dpr;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    w = cssW; h = cssH;
+    if (reduced) frame(cycleMs * 0.75);
   }
-  window.addEventListener('resize', resize);
-  resize();
-
-  // Deterministic pseudo-random so each card's paths differ but stay stable
-  let s = seed;
-  function rand(){ s = (s * 9301 + 49297) % 233280; return s / 233280; }
-
-  const histEnd = w * 0.42;      // where "known" history ends and projection fans out
-  const baseY = h * 0.62;
-  const pointCount = 22;
-  const histPoints = [];
-  const projPaths = []; // several stochastic sample paths after histEnd
-
-  // Build a smooth historical curve (upward actuarial trend)
-  for (let i = 0; i <= pointCount; i++){
-    const x = (histEnd / pointCount) * i;
-    const t = i / pointCount;
-    const y = baseY - t * (h * 0.28) - Math.sin(t * Math.PI * 1.6) * 6 + (rand() - 0.5) * 3;
-    histPoints.push({ x, y });
-  }
-  const lastHist = histPoints[histPoints.length - 1];
-
-  // Build N stochastic projection paths (like actuarial scenario testing) fanning outward
-  const pathCount = 5;
-  for (let p = 0; p < pathCount; p++){
-    const drift = (rand() - 0.35) * 0.9;     // slight upward bias, some paths dip
-    const vol = 4 + rand() * 7;
-    const pts = [{ x: lastHist.x, y: lastHist.y }];
-    const steps = 16;
-    for (let i = 1; i <= steps; i++){
-      const t = i / steps;
-      const x = lastHist.x + (w - lastHist.x) * t;
-      const walk = (rand() - 0.5) * vol;
-      const prevY = pts[pts.length - 1].y;
-      let y = prevY + walk - drift * 1.4;
-      y = Math.max(h * 0.08, Math.min(h * 0.92, y));
-      pts.push({ x, y });
-    }
-    projPaths.push(pts);
-  }
-
-  function drawSmoothPath(pts, strokeStyle, lineWidth, alpha){
-    ctx.save();
-    ctx.globalAlpha = alpha;
-    ctx.strokeStyle = strokeStyle;
-    ctx.lineWidth = lineWidth;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    ctx.beginPath();
-    ctx.moveTo(pts[0].x, pts[0].y);
-    for (let i = 0; i < pts.length - 1; i++){
-      const p0 = pts[i - 1] || pts[i];
-      const p1 = pts[i];
-      const p2 = pts[i + 1];
-      const p3 = pts[i + 2] || p2;
-      const cp1x = p1.x + (p2.x - p0.x) / 6;
-      const cp1y = p1.y + (p2.y - p0.y) / 6;
-      const cp2x = p2.x - (p3.x - p1.x) / 6;
-      const cp2y = p2.y - (p3.y - p1.y) / 6;
-      ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, p2.x, p2.y);
-    }
-    ctx.stroke();
-    ctx.restore();
-  }
-
-  // Precompute a "settled" fan envelope (min/max across sample paths at each x) for the shaded cone
-  const envelopeSteps = 16;
-  function envelopeAt(alpha){
-    const upper = [], lower = [];
-    for (let i = 0; i <= envelopeSteps; i++){
-      let minY = Infinity, maxY = -Infinity, x = 0;
-      projPaths.forEach(path => {
-        const pt = path[Math.min(i, path.length - 1)];
-        x = pt.x;
-        minY = Math.min(minY, pt.y);
-        maxY = Math.max(maxY, pt.y);
-      });
-      const t = i / envelopeSteps;
-      const grow = 0.35 + 0.65 * t; // cone narrower near histEnd, wider further out — animated via alpha
-      const mid = (minY + maxY) / 2;
-      upper.push({ x, y: mid - (mid - minY) * grow * alpha });
-      lower.push({ x, y: mid + (maxY - mid) * grow * alpha });
-    }
-    return { upper, lower };
-  }
-
-  let start = null;
-  const cycleMs = 6500;
 
   function frame(ts){
-    if (start === null) start = ts;
-    const elapsed = (ts - start) % cycleMs;
-    const phase = elapsed / cycleMs; // 0 -> 1 loop
-
-    // draw-in phase for history (0 - 0.28), fan reveal (0.15 - 0.55), settle+shimmer (0.55 - 1)
-    const histReveal = Math.min(1, phase / 0.28);
-    const fanReveal = Math.max(0, Math.min(1, (phase - 0.15) / 0.4));
-    const shimmerT = Math.max(0, (phase - 0.55) / 0.45);
+    const phase = (ts % cycleMs) / cycleMs;
+    const padX = 4, base = h - 8, top = 10, plotH = base - top;
+    const step = (w - padX * 2) / N, bw = Math.max(3, step * 0.58);
+    const fade = phase > 0.94 ? 1 - (phase - 0.94) / 0.06 : 1;
+    const sweep = clamp01((phase - 0.5) / 0.4);        // 0 -> 1 marker travel
+    const lineT = clamp01((phase - 0.22) / 0.4);       // reserve line draw-in
 
     ctx.clearRect(0, 0, w, h);
+    ctx.globalAlpha = fade;
 
-    // baseline axis
+    // baseline
     ctx.strokeStyle = 'rgba(133,146,172,0.25)';
     ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(4, h - 6);
-    ctx.lineTo(w - 4, h - 6);
-    ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(padX, base + 0.5); ctx.lineTo(w - padX, base + 0.5); ctx.stroke();
 
-    // historical curve, revealed left-to-right
-    const revealCount = Math.max(2, Math.floor(histPoints.length * histReveal));
-    drawSmoothPath(histPoints.slice(0, revealCount), teal, 2, 1);
-
-    if (fanReveal > 0){
-      // shaded uncertainty cone
-      const { upper, lower } = envelopeAt(fanReveal);
-      ctx.save();
-      ctx.globalAlpha = 0.16 * fanReveal;
-      ctx.fillStyle = teal;
-      ctx.beginPath();
-      ctx.moveTo(upper[0].x, upper[0].y);
-      upper.forEach(pt => ctx.lineTo(pt.x, pt.y));
-      for (let i = lower.length - 1; i >= 0; i--) ctx.lineTo(lower[i].x, lower[i].y);
-      ctx.closePath();
-      ctx.fill();
-      ctx.restore();
-
-      // faint individual scenario paths
-      projPaths.forEach((path, idx) => {
-        const count = Math.max(2, Math.floor(path.length * fanReveal));
-        drawSmoothPath(path.slice(0, count), idx === 0 ? gold : teal, 1, idx === 0 ? 0.55 : 0.22);
-      });
-
-      // traveling marker along the "expected" (first/central) path once fan is mostly drawn
-      if (shimmerT > 0 || fanReveal >= 0.98){
-        const centralPath = projPaths[0];
-        const travel = reduced ? 0.5 : (0.15 + 0.85 * Math.min(1, shimmerT + 0.15));
-        const idxF = travel * (centralPath.length - 1);
-        const i0 = Math.floor(idxF), i1 = Math.min(centralPath.length - 1, i0 + 1);
-        const tt = idxF - i0;
-        const mx = centralPath[i0].x + (centralPath[i1].x - centralPath[i0].x) * tt;
-        const my = centralPath[i0].y + (centralPath[i1].y - centralPath[i0].y) * tt;
-        ctx.save();
-        ctx.fillStyle = gold;
-        ctx.beginPath();
-        ctx.arc(mx, my, 3, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.globalAlpha = 0.35;
-        ctx.beginPath();
-        ctx.arc(mx, my, 6, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
+    if (variant === 'placeholder'){
+      // quiet dashed outline bars with a soft light sweeping across
+      ctx.setLineDash([3, 3]);
+      ctx.lineWidth = 1;
+      const pos = phase * (N + 8) - 4;
+      for (let i = 0; i < N; i++){
+        const bh = plotH * (0.35 + 0.3 * Math.sin(i * 0.5) * Math.sin(i * 0.17 + 1));
+        const near = Math.max(0, 1 - Math.abs(i - pos) / 4);
+        ctx.strokeStyle = near > 0 ? teal : muted;
+        ctx.globalAlpha = fade * (0.22 + 0.7 * near);
+        ctx.strokeRect(padX + i * step + (step - bw) / 2 + 0.5, base - bh, bw, bh);
       }
+      ctx.setLineDash([]);
+      ctx.globalAlpha = 1;
+      if (!reduced) requestAnimationFrame(frame);
+      return;
     }
 
-    // marker at the historical/projection junction
-    ctx.save();
-    ctx.fillStyle = teal;
-    ctx.beginPath();
-    ctx.arc(lastHist.x, lastHist.y, 2.6, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
+    // bars: grow in staggered, then light up as the marker passes
+    const mx = padX + step * N * sweep;
+    for (let i = 0; i < N; i++){
+      const g = ease(clamp01((phase / 0.4) * 1.6 - (i / N) * 0.6));
+      const bh = bars[i] * plotH * 0.82 * g;
+      const x = padX + i * step + (step - bw) / 2;
+      const lit = sweep > 0 ? Math.max(0, 1 - Math.abs(x + bw / 2 - mx) / (step * 5)) : 0;
+      const grad = ctx.createLinearGradient(0, base - bh, 0, base);
+      grad.addColorStop(0, teal);
+      grad.addColorStop(1, 'rgba(53,201,176,0.05)');
+      ctx.globalAlpha = fade * (0.35 + 0.55 * lit);
+      ctx.fillStyle = grad;
+      ctx.fillRect(x, base - bh, bw, bh);
+    }
+    ctx.globalAlpha = fade;
 
+    // reserve run-off line
+    const pts = [];
+    for (let i = 0; i < N; i++) pts.push({ x: padX + i * step + step / 2, y: base - reserve[i] * plotH * 0.92 });
+    const shown = lineT * (N - 1);
+    ctx.strokeStyle = gold; ctx.lineWidth = 1.6; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(pts[0].x, pts[0].y);
+    for (let i = 1; i <= Math.floor(shown); i++) ctx.lineTo(pts[i].x, pts[i].y);
+    const fi = Math.floor(shown);
+    if (fi < N - 1){
+      const f = shown - fi;
+      ctx.lineTo(pts[fi].x + (pts[fi + 1].x - pts[fi].x) * f, pts[fi].y + (pts[fi + 1].y - pts[fi].y) * f);
+    }
+    ctx.stroke();
+
+    // marker riding the reserve line
+    if (sweep > 0){
+      const idx = sweep * (N - 1), i0 = Math.floor(idx), i1 = Math.min(N - 1, i0 + 1), f = idx - i0;
+      const px = pts[i0].x + (pts[i1].x - pts[i0].x) * f, py = pts[i0].y + (pts[i1].y - pts[i0].y) * f;
+      ctx.fillStyle = gold;
+      ctx.globalAlpha = fade * 0.22; ctx.beginPath(); ctx.arc(px, py, 8, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = fade;        ctx.beginPath(); ctx.arc(px, py, 3, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
     if (!reduced) requestAnimationFrame(frame);
   }
 
-  if (reduced){
-    frame(cycleMs); // draw one static, fully-settled frame
-  } else {
-    requestAnimationFrame(frame);
-  }
+  window.addEventListener('resize', resize);
+  resize();
+  if (!reduced) requestAnimationFrame(frame);
 }
 
-document.querySelectorAll('.model-card__chart').forEach((el, i) => {
+document.querySelectorAll('.model-card__chart').forEach(el => {
   const canvas = document.createElement('canvas');
   el.appendChild(canvas);
-  initModelVisual(canvas, 1000 + i * 777);
+  initModelVisual(canvas, el.dataset.chart === 'reserve' ? 'reserve' : 'placeholder');
 });
 
 /* ================= Actuarial Science page: see pages/actuarial-science/ / actuarial-science.js ================= */
