@@ -64,12 +64,17 @@
 .timeline{padding:5rem clamp(1.5rem,5vw,4rem);border-top:1px solid var(--border);}
 .timeline .section-title{text-align:left;}
 .skills__marquee:hover .skills__track{animation-play-state:paused;}
-@keyframes marquee-scroll{to{transform:translateX(-50%);}}
+@keyframes marquee-scroll{to{transform:translateX(-33.333333%);}}
 .skill-tile{
   position:relative;width:104px;height:104px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;
   transition:transform .25s ease, filter .25s ease;
 }
 .skill-tile img{width:100%;height:100%;object-fit:contain;}
+.toolkit .skill-tile[data-name="NumPy"] img,
+.toolkit .skill-tile[data-name="Pandas"] img{width:80%;height:80%;}
+.toolkit .skill-tile[data-name="Python"] img{width:80%;height:80%;}
+.toolkit .skill-tile[data-name="GitHub"] img,
+.toolkit .skill-tile[data-name="MS Office"] img{width:130%;height:130%;}
 .skill-tile:hover{transform:translateY(-3px);filter:drop-shadow(0 4px 10px color-mix(in srgb, var(--teal) 55%, transparent));}
 
 
@@ -268,7 +273,7 @@
 .skills__marquee{overflow:hidden;width:100%;max-width:1100px;height:220px;-webkit-mask-image:linear-gradient(to right,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(to right,transparent,#000 12%,#000 88%,transparent);}
 .skills__track{display:flex;flex-wrap:nowrap;align-items:center;height:100%;gap:var(--gap);padding-right:var(--gap);width:max-content;animation:marquee-scroll 28s linear infinite;}
 .skills__marquee:hover .skills__track{animation-play-state:paused;}
-@keyframes marquee-scroll{to{transform:translateX(-50%);}}
+@keyframes marquee-scroll{to{transform:translateX(-33.333333%);}}
 .toolkit .skill-tile{width:150px;height:150px;}
 .skills__info{min-height:5rem;margin-top:2.5rem;}
 .skills__info-tool{font-size:1.4rem;}
