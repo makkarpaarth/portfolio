@@ -73,10 +73,8 @@
 .skill-tile:hover{transform:translateY(-3px);filter:drop-shadow(0 4px 10px color-mix(in srgb, var(--teal) 55%, transparent));}
 
 
-.skills__info-tool{font-family:var(--sans);font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.3rem;opacity:0;transform:translateY(6px);transition:opacity .3s ease, transform .3s ease;}
-.skills__info-use{font-size:0.85rem;color:var(--muted);line-height:1.4;max-width:340px;margin:0 auto;opacity:0;transform:translateY(6px);transition:opacity .3s ease .05s, transform .3s ease .05s;}
-.skills__info.is-active .skills__info-tool,
-.skills__info.is-active .skills__info-use{opacity:1;transform:translateY(0);}
+.skills__info-tool{font-family:var(--sans);font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.3rem;}
+.skills__info-use{font-size:0.85rem;color:var(--muted);line-height:1.4;max-width:340px;margin:0 auto;}
 
 .timeline__list{list-style:none;width:100%;position:relative;padding:0 2.5rem;}
 .timeline__list::before{

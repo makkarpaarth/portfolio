@@ -45,7 +45,6 @@ document.querySelectorAll('.as-reveal__trigger').forEach(btn => {
     const reveal = btn.closest('.as-reveal');
     const isOpen = reveal.classList.toggle('open');
     btn.setAttribute('aria-expanded', String(isOpen));
-    btn.querySelector('.as-reveal__icon').textContent = isOpen ? '\u2212' : '+';
   });
 });
 

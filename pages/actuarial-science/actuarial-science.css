@@ -52,8 +52,9 @@
 }
 .as-reveal__trigger:hover{color:var(--teal);}
 .as-reveal__icon{
-  font-family:var(--mono);font-size:1.1rem;color:var(--muted);flex-shrink:0;
-  transition:transform .3s ease;
+  display:grid;place-items:center;width:1.1em;height:1.1em;
+  font-family:var(--mono);font-size:1.1rem;line-height:1;color:var(--muted);flex-shrink:0;
+  transform-origin:center;transition:transform .3s ease,color .3s ease;
 }
 .as-reveal.open .as-reveal__icon{transform:rotate(45deg);color:var(--teal);}
 .as-reveal__panel{
@@ -88,14 +89,17 @@
 .as-card__back p{font-size:0.85rem;line-height:1.7;color:var(--muted);}
 .as-card__back .as-card__name{color:var(--teal);}
 
-.as-flow{display:flex;flex-wrap:wrap;gap:0;align-items:center;margin-top:1.8rem;}
+.as-flow{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));align-items:start;max-width:760px;margin:2.2rem auto 0;padding:0 1rem;}
 .as-flow__step{
-  font-family:var(--mono);font-size:0.82rem;color:var(--text);
-  border:1px solid var(--border);border-radius:2px;padding:0.6rem 1rem;background:var(--surface);
-  transition:border-color .25s ease,color .25s ease;
+  display:flex;flex-direction:column;align-items:center;gap:.7rem;min-width:0;
+  text-align:center;font-family:var(--mono);font-size:.74rem;line-height:1.35;color:var(--text);
 }
-.as-flow__step:hover{border-color:var(--gold);color:var(--gold);}
-.as-flow__arrow{color:var(--muted);padding:0 0.6rem;font-family:var(--mono);}
+.as-flow__index{
+  display:grid;place-items:center;width:2.1rem;height:2.1rem;border:1px solid var(--gold);
+  border-radius:50%;background:var(--bg);color:var(--gold);font-size:.65rem;letter-spacing:.05em;
+  box-shadow:0 0 0 6px rgba(201,162,75,.05);
+}
+.as-flow__arrow{align-self:start;margin-top:1rem;color:var(--teal);font-family:var(--mono);font-size:.9rem;text-align:center;opacity:.8;}
 
 .as-close{
   max-width:900px;margin:0 auto;padding:6rem clamp(1.5rem,5vw,4rem) 8rem;
@@ -112,4 +116,9 @@
   .as-section{grid-template-columns:1fr;}
   .as-section__index{flex-direction:row;align-items:center;gap:0.8rem;}
   .as-section__thread{display:none;}
+}
+@media (max-width:900px){
+  .as-flow{display:flex;justify-content:center;gap:.7rem 1rem;}
+  .as-flow__step{flex:0 1 10rem;}
+  .as-flow__arrow{margin-top:1rem;}
 }

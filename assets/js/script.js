@@ -29,7 +29,6 @@ if (backToTop) {
     if (!tile) return;
     tool.textContent = tile.dataset.name;
     use.textContent = tile.dataset.use;
-    panel.classList.add('is-active');
   });
 })();
 
